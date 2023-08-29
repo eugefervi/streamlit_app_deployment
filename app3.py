@@ -88,7 +88,7 @@ def pantalla3(uploaded_image, opciones):
 
         st.write("A continuación se seleccionarán los productos que más te favorocen en función del tono de tu piel")
         st.write("Pinchando en los productos podrás comprarlos directamente en la página web")
-        st.write("Te quedarán ideales ;)")
+        st.write("Te quedarán ideales :dancer:")
 
         filtered_database = database[database['producto'].isin(seleccion)]
         if uploaded_image is not None:
@@ -99,16 +99,16 @@ def pantalla3(uploaded_image, opciones):
             cols = st.columns(3)
             for idx, (_, row) in enumerate(filtered_database.iterrows()):
                 # vamos a revisar el tamaño de las imagenes para que tengan todas el mismo y no se decuadre
-                urllib.request.urlretrieve(row['Image URLs'], "gfg.png")
-                img = Image.open("gfg.png")
-                if img.size == (256, 341):
-                    with cols[idx % 3]:
-                        st.markdown(f"[![Foo]({row['Image URLs']})]({row['Product URL']})")
-                        #st.markdown("[![Foo](http://www.google.com.au/images/nav_logo7.png)](http://google.com.au/)")
-    
-                        #display_main_image(row['imagen'], caption=row['producto'], link = 'https://www.zara.com/es/')
-                        #display_external_image(row['imagen'], link = row['Image URLs'])
+                try:
+                    urllib.request.urlretrieve(row['Image URLs'], "gfg.png")
+                    img = Image.open("gfg.png")
 
+                    if img.size == (256, 341):
+                        with cols[idx % 3]:
+                            st.markdown(f"[![Foo]({row['Image URLs']})]({row['Product URL']})")
+                except:
+                    pass
+                    
 def identify_gender(image):
     # Preprocesamiento de la imagen para la clasificación de género
     image = Image.open(image).convert('RGB')
