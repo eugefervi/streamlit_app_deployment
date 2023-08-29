@@ -1,6 +1,6 @@
 streamlit
 pandas
-tensorflow as tf
+tensorflow
 PIL
 time
 urllib
