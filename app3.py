@@ -86,6 +86,7 @@ def pantalla3(uploaded_image, opciones):
     if seleccion:
         st.subheader("Resultados")
 
+        st.write("A continuación se seleccionarán los productos que más te favorocen en función del tono de tu piel")
         st.write("Pinchando en los productos podrás comprarlos directamente en la página web")
         st.write("Te quedarán ideales ;)")
 
