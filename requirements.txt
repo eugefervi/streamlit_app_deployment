@@ -1,6 +1,6 @@
 streamlit
 pandas
 tensorflow
-PIL
+Pillow
 time
 urllib
