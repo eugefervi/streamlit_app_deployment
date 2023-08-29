@@ -79,17 +79,16 @@ def pantalla3(uploaded_image, opciones):
     st.success("¡Análisis completado!")
 
     st.subheader("Elige los productos que buscas")
-    st.write("Te quedarán ideales ;)")
     
     # Opciones de selección
     seleccion = st.multiselect("Selecciona los productos que buscas:", opciones)
 
     if seleccion:
         st.subheader("Resultados")
-        #st.write("Productos seleccionados:")
-        #for producto in seleccion:
-        #    st.write(f"- {producto}")
-        st.write("Productos encontrados en la base de datos:")
+
+        st.write("Pinchando en los productos podrás comprarlos directamente en la página web")
+        st.write("Te quedarán ideales ;)")
+
         filtered_database = database[database['producto'].isin(seleccion)]
         if uploaded_image is not None:
             gender = identify_gender(uploaded_image)
