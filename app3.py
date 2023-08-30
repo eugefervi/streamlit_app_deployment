@@ -14,6 +14,7 @@ import tensorflow as tf
 from PIL import Image
 import time
 import urllib.request
+from gender_detection import identify_gender
 
 logo_silbon = 'https://www.silbonshop.com/on/demandware.static/-/Library-Sites-SilbonSharedLibrary/es/dw8ce524c4/logo.svg'
 base_url = "https://www.silbonshop.com"
@@ -109,20 +110,7 @@ def pantalla3(uploaded_image, opciones):
                 except:
                     pass
                     
-def identify_gender(image):
-    # Preprocesamiento de la imagen para la clasificación de género
-    image = Image.open(image).convert('RGB')
-    image = image.resize((224, 224))
-    image = tf.keras.preprocessing.image.img_to_array(image)
-    image = tf.keras.applications.mobilenet_v2.preprocess_input(image)
-    image = tf.expand_dims(image, axis=0)
 
-    # Identificación del género
-    predictions = model.predict(image)
-    decoded_predictions = tf.keras.applications.mobilenet_v2.decode_predictions(predictions)
-    gender = 'Mujer' if decoded_predictions[0][0][1] in ['lipstick', 'wig'] else 'Hombre'
-
-    return gender
 
 def display_main_image(image, caption, link = False):
     # Descargar y redimensionar la imagen para mostrarla en la aplicación
