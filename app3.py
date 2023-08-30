@@ -118,7 +118,7 @@ def pantalla3(uploaded_image, opciones):
 
         filtered_database = database[database['producto'].isin(seleccion)]
         if uploaded_image is not None:
-            gender = gd.identify_gender(uploaded_image)
+            gender = identify_gender(uploaded_image)
             filtered_database = filtered_database[filtered_database['genero'] == gender]
 
             # Dividir los elementos en columnas de 3 elementos
@@ -255,16 +255,6 @@ def identify_gender(input_path: str):
         gender = GENDER_LIST[i]
         #gender_confidence_score = gender_preds[0][i]
         return gender
-
-
-
-
-
-
-
-
-
-
 
 
 
