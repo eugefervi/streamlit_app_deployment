@@ -225,22 +225,23 @@ def image_resize(image, width = None, height = None, inter = cv2.INTER_AREA):
     return cv2.resize(image, dim, interpolation = inter)
 
 
-def identify_gender(input_path: str):
+def identify_gender(image):
     """Predict the gender of the faces showing in the image"""
-    # Read Input Image
-    img = cv2.imread(input_path)
-    # resize the image, uncomment if you want to resize the image
+    # To read image file buffer with OpenCV:
+    bytes_data = image.getvalue()    
+    cv2_img = cv2.imdecode(np.frombuffer(bytes_data, np.uint8), cv2.IMREAD_COLOR)
+
     # img = cv2.resize(img, (frame_width, frame_height))
     # Take a copy of the initial image and resize it
-    frame = img.copy()
-    if frame.shape[1] > 400:
-        frame = image_resize(frame, width=400)
+    #frame = img.copy()
+    if cv2_img.shape[1] > 400:
+        cv2_img = image_resize(cv2_img, width=400)
     # predict the faces
-    faces = get_faces(frame)
+    faces = get_faces(cv2_img)
     # Loop over the faces detected
     # for idx, face in enumerate(faces):
     for i, (start_x, start_y, end_x, end_y) in enumerate(faces):
-        face_img = frame[start_y: end_y, start_x: end_x]
+        face_img = cv2_img[start_y: end_y, start_x: end_x]
         # image --> Input image to preprocess before passing it through our dnn for classification.
         # scale factor = After performing mean substraction we can optionally scale the image by some factor. (if 1 -> no scaling)
         # size = The spatial size that the CNN expects. Options are = (224*224, 227*227 or 299*299)
