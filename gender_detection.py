@@ -189,7 +189,7 @@ def identify_gender(input_path: str):
         return gender
 
     
-if __name__ == '__main__':
-    # Parsing command line arguments entered by user
-    predict_gender('../estefa.png')
+#if __name__ == '__main__':
+#    # Parsing command line arguments entered by user
+#    predict_gender('../estefa.png')
     

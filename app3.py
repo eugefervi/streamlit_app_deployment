@@ -14,7 +14,7 @@ import tensorflow as tf
 from PIL import Image
 import time
 import urllib.request
-from gender_detection import identify_gender
+import gender_detection as gd
 
 logo_silbon = 'https://www.silbonshop.com/on/demandware.static/-/Library-Sites-SilbonSharedLibrary/es/dw8ce524c4/logo.svg'
 base_url = "https://www.silbonshop.com"
@@ -93,7 +93,7 @@ def pantalla3(uploaded_image, opciones):
 
         filtered_database = database[database['producto'].isin(seleccion)]
         if uploaded_image is not None:
-            gender = identify_gender(uploaded_image)
+            gender = gd.identify_gender(uploaded_image)
             filtered_database = filtered_database[filtered_database['genero'] == gender]
 
             # Dividir los elementos en columnas de 3 elementos
