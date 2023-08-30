@@ -3,4 +3,4 @@ pandas
 tensorflow
 Pillow
 urllib3
-opencv-python
+opencv-python-headless
