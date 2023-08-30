@@ -188,7 +188,7 @@ def identify_gender(input_path: str):
         #gender_confidence_score = gender_preds[0][i]
         return gender
 
-    
+#genero = identify_gender('../estefa.png')
 #if __name__ == '__main__':
 #    # Parsing command line arguments entered by user
 #    predict_gender('../estefa.png')
