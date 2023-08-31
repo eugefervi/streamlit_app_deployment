@@ -2,9 +2,11 @@
 
 #C:\Users\eugef\Documents\geno\empresa\glowup\MVPs\subtono\streamlit_app\env\Scripts
 
-#C:\Users\eugef\Documents\geno\empresa\glowup\MVPs\subtono\streamlit_app\env\project\scripts
+#C:\Users\eugef\Documents\geno\empresa\glowup\MVPs\subtono\streamlit_app\env\project\scripts\streamlit_app_deployment
 
 #streamlit run app3.py
+
+# C:/Users/eugef/Documents/geno/empresa/glowup/MVPs/subtono/streamlit_app/env/project/scripts/streamlit_app_deployment
 
 
 
@@ -27,16 +29,19 @@ database.columns = ['Product URL', 'Product Name', 'Selling Price', 'Discount',
        'Image URLs', 'cathegory', 'base', 'genero', 'subcathegory', 'producto']
 len(database['producto'].unique())
 # seleccionamos los productos de interés porque no tiene sentido
-# decirle a la gnte que seleccione monederos también. Eso está bien
+# decirle a la gnte que seleccione, monederos también. Eso está bien
 # tenerlo para la combinación de productos y completar el look
-interes = database[(database['subcathegory']=='Ropa')|
-                   (database['producto']=='Corbatas y pajaritas')|
-                   (database['producto']=='Gafas de sol y cordones')|
-                   (database['producto']=='Gafas de sol')|
-                   (database['producto']=='Sombreros y gorras')]
+
+def filter_dataframe(database):
+    filtered_df = database[(database['subcathegory']=='Ropa')|
+                       (database['producto']=='Corbatas y pajaritas')|
+                       (database['producto']=='Gafas de sol y cordones')|
+                       (database['producto']=='Gafas de sol')|
+                       (database['producto']=='Sombreros y gorras')]
+    return filtered_df
 
 
-opciones = list(interes['producto'].unique())
+#opciones = list(interes['producto'].unique())
 
 # Cargamos el modelo de IA preentrenado para identificar el género
 # Utilizamos el modelo MobileNetV2 con transfer learning
@@ -80,14 +85,14 @@ def main():
         pantalla2()
 
     if st.session_state.state == 'pantalla3':
-        pantalla3(uploaded_image, opciones)
+        pantalla3(uploaded_image, database)
 
 def pantalla1():
-    st.subheader("Toma una foto")
-    st.write("Asegúrate de que haya buenas condiciones de luz :sun_with_face: y de no estar maquillad@ :no_entry_sign:")
+    st.subheader("Sácate una foto")
+    st.write("Asegúrate de que haya buenas condiciones de luz :sun_with_face: y de no estar maquillad@ :no_entry_sign: para obtener un resultado más preciso")
 
     #image = st.file_uploader("Sube una imagen o toma una foto", type=["jpg", "jpeg", "png"], accept_multiple_files=False, key='file_uploader')
-    image = st.camera_input("Take a picture")
+    image = st.camera_input("")
     
     if image is not None:
         #display_main_image(image, caption="Imagen subida", link = False)
@@ -101,24 +106,30 @@ def pantalla2():
     #st.success("¡Análisis completado!")
     st.session_state.state = 'pantalla3'
 
-def pantalla3(uploaded_image, opciones):
+def pantalla3(uploaded_image, database):
     st.success("¡Análisis completado!")
 
-    st.subheader("Elige los productos que buscas")
+    st.subheader("Selecciona los productos que deseas")
     
+    #Hacemos que se muestren únicamente los productos del sexo de la persona que se hace el servicio
+    gender = identify_gender(uploaded_image)
+    
+    interes = filter_dataframe(database)
+    
+    opciones = list(interes['producto'][interes['genero']==gender].unique())
     # Opciones de selección
-    seleccion = st.multiselect("Selecciona los productos que buscas:", opciones)
+    seleccion = st.multiselect("", opciones)
 
     if seleccion:
         st.subheader("Resultados")
 
-        st.write("A continuación se seleccionarán los productos que más te favorocen en función del tono de tu piel")
+        st.write("A continuación se mostrarán los productos que más te favorocen en función del tono de tu piel")
         st.write("Pinchando en los productos podrás comprarlos directamente en la página web")
         st.write("Te quedarán ideales :dancer:")
 
         filtered_database = database[database['producto'].isin(seleccion)]
         if uploaded_image is not None:
-            gender = identify_gender(uploaded_image)
+            
             filtered_database = filtered_database[filtered_database['genero'] == gender]
 
             # Dividir los elementos en columnas de 3 elementos
