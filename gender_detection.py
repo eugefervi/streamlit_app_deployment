@@ -12,6 +12,7 @@ Created on Wed Aug 30 09:51:52 2023
 # Import Libraries
 import cv2
 import numpy as np
+import streamlit as st
 
 # The gender model architecture
 # https://drive.google.com/open?id=1W_moLzMlGiELyPxWiYQJ9KFaXroQ_NFQ
@@ -157,6 +158,7 @@ def predict_gender(input_path: str):
     # Cleanup
     cv2.destroyAllWindows()
 
+@st.cache_data
 def identify_gender(image):
     """Predict the gender of the faces showing in the image"""
     # To read image file buffer with OpenCV:

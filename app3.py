@@ -21,17 +21,17 @@ import gender_detection as gd
 
 logo_silbon = 'https://www.silbonshop.com/on/demandware.static/-/Library-Sites-SilbonSharedLibrary/es/dw8ce524c4/logo.svg'
 base_url = "https://www.silbonshop.com"
+products_path = "silbon_products.csv"
 
-database = pd.read_csv("silbon_products.csv")
-
-
-def clean_dataframe(database):
+@st.cache_data
+def read_clean_dataframe(products_path):
+    database = pd.read_csv(products_path)
     del database['Unnamed: 0']
     database.columns = ['Product URL', 'Product Name', 'Selling Price', 'Discount',
            'Image URLs', 'cathegory', 'base', 'genero', 'subcathegory', 'producto']
     return database
     
-
+@st.cache_data
 def filter_dataframe(database):
     
     filtered_df = database[(database['subcathegory']=='Ropa')|
@@ -50,28 +50,31 @@ def main():
 
     st.title("Descubre lo que te favorece :wink:")
 
-    # Variable de estado para controlar el flujo de la aplicación
-    uploaded_image = pantalla1()
-    if 'state' not in st.session_state:
-        st.session_state.state = 'pantalla1'
-    if st.session_state.state == 'pantalla2':
-        pantalla2()
-
-    if st.session_state.state == 'pantalla3':
-        pantalla3(uploaded_image, database)
-
-def pantalla1():
     st.subheader("Sácate una foto")
     st.write("Asegúrate de que haya buenas condiciones de luz :sun_with_face: y de no estar maquillad@ :no_entry_sign: para obtener un resultado más preciso")
 
     #image = st.file_uploader("Sube una imagen o toma una foto", type=["jpg", "jpeg", "png"], accept_multiple_files=False, key='file_uploader')
     image = st.camera_input("")
+    if image is not None:
+        pantalla1(image)
+        if 'state' not in st.session_state:
+            st.session_state.state = 'pantalla1'
+        if st.session_state.state == 'pantalla2':
+            pantalla2()
     
+        if st.session_state.state == 'pantalla3':
+            pantalla3(image, products_path)
+    
+    else:
+        st.session_state.state = 'state'
+
+
+def pantalla1(image):
+
     if image is not None:
         #display_main_image(image, caption="Imagen subida", link = False)
         if st.button("Analizar"):
             st.session_state.state = 'pantalla2'
-        return image
 
 def pantalla2():
     with st.spinner("Tu imagen está siendo analizada..."):
@@ -79,11 +82,11 @@ def pantalla2():
     #st.success("¡Análisis completado!")
     st.session_state.state = 'pantalla3'
 
-def pantalla3(uploaded_image, database):
+def pantalla3(uploaded_image, products_path):
     st.success("¡Análisis completado!")
 
     st.subheader("Selecciona los productos que deseas")
-    database = clean_dataframe(database)
+    database = read_clean_dataframe(products_path)
     
     #Hacemos que se muestren únicamente los productos del sexo de la persona que se hace el servicio
     gender = gd.identify_gender(uploaded_image)
